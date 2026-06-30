@@ -1,13 +1,7 @@
+import 'package:bitflame/audio/layer_state.dart';
 import 'package:bitflame/puzzle/puzzle_model.dart';
 
-const layerNames = [
-  'Grundpuls / Kick',
-  'Snare / Clap',
-  'Bassline',
-  'Arpeggio',
-  'Lead-Melodie',
-  'FX / Finale-Layer',
-];
+final layerNames = [for (final asset in pixelhainAudioAssets) asset.name];
 
 List<PuzzleDefinition> createPixelhainPuzzles() => [
   PuzzleDefinition(
@@ -76,7 +70,7 @@ List<PuzzleDefinition> createPixelhainPuzzles() => [
         id: 'bend',
         type: NodeType.curve,
         position: GridPoint(2, 2),
-        rotation: Direction.up,
+        rotation: Direction.left,
       ),
       PuzzleNode(id: 'b', type: NodeType.pattern, position: GridPoint(2, 1)),
       PuzzleNode(id: 'c', type: NodeType.pattern, position: GridPoint(3, 1)),

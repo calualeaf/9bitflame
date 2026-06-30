@@ -19,6 +19,7 @@
 ## Arbeitsregeln
 - Es darf keine lokale Entwicklungsumgebung beim Auftraggeber vorausgesetzt werden; alle relevanten Checks und der Release-Build müssen in GitHub Actions lauffähig sein.
 - Vor Pull Requests müssen Formatcheck, Analyse und Tests ausgeführt oder als Umgebungswarnung dokumentiert werden.
+- Bei jeder Änderung prüfen, ob `README.md` angepasst werden muss; falls nicht, diese Entscheidung bewusst treffen.
 - Fachliche oder designrelevante Änderungen werden in `docs/` dokumentiert.
 - Keine try/catch-Blöcke um Imports verwenden.
 - Kleine, klar benannte Dateien bevorzugen und Domainlogik möglichst unabhängig von Rendering und Audio testbar halten.

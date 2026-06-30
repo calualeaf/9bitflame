@@ -11,12 +11,14 @@
 - Fast-gelöst-, Teilroute- und Gelöst-Feedback.
 - Optionales Glitch-Minispiel nach Puzzle 3 als nicht blockierende Belohnung.
 - Abschlusszustand mit vollständig aktivierter Welt und komplettem Track.
+- Sechs kurze 8-Bit-Audio-Layer im Gameboy-inspirierten Stil, die prozedural
+  aus textbasierten Rezepten erzeugt werden.
 
 ## Projektstruktur
 
 ```text
 .github/workflows/      CI-Checks und manueller Android-Release-Build
-assets/                 Platzhalter für Audio-, Bild- und Font-Assets
+assets/                 Audio-, Bild- und Font-Assets
 docs/                   Fachliche Beschreibung und Design-Spezifikation
 lib/app/                Flutter-App-Shell
 lib/game/               Pixelhain-Screen, Leveldaten und UI-Prototyp
@@ -53,3 +55,12 @@ Der Workflow führt Formatcheck, Analyse und Tests aus, baut anschließend `flut
 ## Umsetzungshinweise
 
 Die fachliche Grundlage liegt in `docs/2026-06-30_Design_Spec_Prototyp.md`. Änderungen an Gameplay, Architektur oder Akzeptanzkriterien sollen in `docs/` nachvollziehbar dokumentiert werden. Weitere Agenten- und Projektkonventionen stehen in `AGENTS.md`.
+
+## Audio
+
+Der Prototyp enthält sechs prozedurale Chiptune-Layer mit
+Square-/Triangle-Waves und Noise-Percussion. Die Layer sind bewusst
+Gameboy-inspiriert angelegt: Kick, Snare, Bassline, Arpeggio, Lead-Hook und
+FX-Fill ergänzen sich nach und nach zu einem eingängigen Chiptune-Loop. Die
+Rezepte liegen als Dart-Code im Repository, damit Pull Requests keine
+Binärdateien enthalten müssen.
