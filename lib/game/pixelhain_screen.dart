@@ -111,15 +111,19 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
                       onAdd: _add,
                     ),
                     const SizedBox(height: 12),
-                    Wrap(spacing: 8, runSpacing: 8, children: [
-                      for (final layer in audio.layers)
-                        Chip(
-                          label: Text(layer.name),
-                          backgroundColor: layer.unlocked
-                              ? const Color(0xff72ffb6)
-                              : const Color(0xff243044),
-                        ),
-                    ]),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final layer in audio.layers)
+                          Chip(
+                            label: Text(layer.name),
+                            backgroundColor: layer.unlocked
+                                ? const Color(0xff72ffb6)
+                                : const Color(0xff243044),
+                          ),
+                      ],
+                    ),
                     const SizedBox(height: 16),
                     if (evaluation.status == PuzzleStatus.solved && !solvedAll)
                       FilledButton(
@@ -152,7 +156,10 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
 }
 
 class _WorldTree extends StatelessWidget {
-  const _WorldTree({required this.activeLayers, required this.glitch});
+  const _WorldTree({
+    required this.activeLayers,
+    required this.glitch,
+  });
   final int activeLayers;
   final bool glitch;
 

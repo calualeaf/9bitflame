@@ -118,8 +118,7 @@ class PuzzleDefinition {
     title: title,
     layerName: layerName,
     nodes: [
-      for (final node in nodes)
-        node.id == replacement.id ? replacement : node,
+      for (final node in nodes) node.id == replacement.id ? replacement : node,
     ],
     requiredPatternIds: requiredPatternIds,
     tutorialText: tutorialText,
