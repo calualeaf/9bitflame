@@ -64,16 +64,19 @@ void main() {
     expect(result.status, PuzzleStatus.solved);
   });
 
-  test('procedural chiptune layers render as wav data without binary assets', () {
-    const synth = PixelhainChiptuneSynth();
-    final rendered = [
-      for (final recipe in pixelhainLayerRecipes) synth.renderWav(recipe),
-    ];
+  test(
+    'procedural chiptune layers render as wav data without binary assets',
+    () {
+      const synth = PixelhainChiptuneSynth();
+      final rendered = [
+        for (final recipe in pixelhainLayerRecipes) synth.renderWav(recipe),
+      ];
 
-    expect(rendered, hasLength(6));
-    for (final wav in rendered) {
-      expect(ascii.decode(wav.sublist(0, 4)), 'RIFF');
-      expect(ascii.decode(wav.sublist(8, 12)), 'WAVE');
-    }
-  });
+      expect(rendered, hasLength(6));
+      for (final wav in rendered) {
+        expect(ascii.decode(wav.sublist(0, 4)), 'RIFF');
+        expect(ascii.decode(wav.sublist(8, 12)), 'WAVE');
+      }
+    },
+  );
 }
