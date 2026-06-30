@@ -35,7 +35,9 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
 
   void _add(PuzzleNode node) {
     setState(() {
-      if (route.isEmpty || route.last.isNeighbor(node.position)) route = [...route, node.position];
+      if (route.isEmpty || route.last.isNeighbor(node.position)) {
+        route = [...route, node.position];
+      }
       evaluation = engine.evaluate(puzzle, route);
       if (evaluation.status == PuzzleStatus.solved && !progression.isSolved(puzzle.id)) {
         progression.markSolved(puzzle.id);
@@ -45,7 +47,9 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
   }
 
   void _next() => setState(() {
-        if (index < puzzles.length - 1) index++;
+        if (index < puzzles.length - 1) {
+          index++;
+        }
         route = <GridPoint>[];
         evaluation = const PuzzleEvaluation(PuzzleStatus.incomplete, 'Ziehe vom Start zum Ziel.', 0);
       });
