@@ -5,6 +5,8 @@ import 'package:bitflame/puzzle/puzzle_engine.dart';
 import 'package:bitflame/puzzle/puzzle_model.dart';
 import 'package:flutter/material.dart';
 
+// dart format off
+
 class PixelhainScreen extends StatefulWidget {
   const PixelhainScreen({super.key});
   @override
@@ -137,7 +139,6 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
                       ),
                     if (progression.glitchUnlocked &&
                         !progression.glitchCompleted)
-                      // dart format off
                       TextButton(
                         onPressed: () => setState(
                           () => progression.glitchCompleted = true,
@@ -146,7 +147,6 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
                           'Glitch-Minispiel: Parallel Run starten',
                         ),
                       ),
-                      // dart format on
                   ],
                 ),
               ),
@@ -213,7 +213,6 @@ class _Grid extends StatelessWidget {
         builder: (context, constraints) {
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
-            // dart format off
             onPanStart: (details) => _addNodeAt(
               details.localPosition,
               constraints.biggest,
@@ -222,7 +221,6 @@ class _Grid extends StatelessWidget {
               details.localPosition,
               constraints.biggest,
             ),
-            // dart format on
             child: GridView.count(
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 4,
