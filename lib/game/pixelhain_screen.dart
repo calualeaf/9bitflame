@@ -17,7 +17,7 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
   final puzzles = createPixelhainPuzzles();
   final engine = PuzzleEngine();
   final progression = ProgressionState();
-  late final AudioLayerSystem audio = AudioLayerSystem(layerNames);
+  late final AudioLayerSystem audio = AudioLayerSystem(pixelhainAudioAssets);
   var index = 0;
   var route = <GridPoint>[];
   PuzzleEvaluation evaluation = const PuzzleEvaluation(
@@ -118,11 +118,20 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
                       runSpacing: 8,
                       children: [
                         for (final layer in audio.layers)
-                          Chip(
-                            label: Text(layer.name),
-                            backgroundColor: layer.unlocked
-                                ? const Color(0xff72ffb6)
-                                : const Color(0xff243044),
+                          Tooltip(
+                            message: [
+                              layer.description,
+                              layer.asset,
+                              layer.hasRenderedAudio
+                                  ? 'WAV gerendert'
+                                  : 'Noch stumm',
+                            ].join('\n'),
+                            child: Chip(
+                              label: Text(layer.name),
+                              backgroundColor: layer.unlocked
+                                  ? const Color(0xff72ffb6)
+                                  : const Color(0xff243044),
+                            ),
                           ),
                       ],
                     ),
@@ -185,7 +194,7 @@ class _WorldTree extends StatelessWidget {
         child: Text(
           glitch
               ? '🌳✨🟣'
-              : List.filled(activeLayers.clamp(1, 6), '🌳✨').join(' '),
+              : List.filled(activeLayers.clamp(1, 6).toInt(), '🌳✨').join(' '),
           style: TextStyle(fontSize: 28, color: color),
         ),
       ),
@@ -266,6 +275,7 @@ class _Grid extends StatelessWidget {
       onTap: node == null
           ? null
           : () => node.isRotatable ? onTap(node) : onAdd(node),
+      onLongPress: node != null && node.isRotatable ? () => onTap(node) : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         margin: const EdgeInsets.all(5),

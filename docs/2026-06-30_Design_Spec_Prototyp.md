@@ -679,3 +679,9 @@ Empfohlene Umsetzungsreihenfolge:
 Die wichtigste technische und gestalterische Priorität bleibt:
 
 > Jede gelöste Aktion muss den Track spürbar besser machen.
+
+## 11. Umsetzungsnotiz 2026-06-30
+
+- Der Prototyp definiert nun sechs kurze, prozedurale Chiptune-Layer als textbasierte Dart-Rezepte. Der Klang ist Gameboy-inspiriert: Square-/Triangle-Waves, Noise-Percussion, ein klarer Bass-Groove, Arpeggio und Lead-Hook. Dadurch bleiben Pull Requests frei von Binärdateien.
+- Puzzle 3 („Bassline“) verwendet einen korrekt ausgerichteten Kurvenknoten auf `(2, 2)`, sodass die Sollroute `Start → a → bend → b → c → Ziel` lösbar ist. Rotierbare Knoten lassen sich zusätzlich per Long-Press drehen, falls ein normaler Tap während der Routeninteraktion schwer auszulösen ist.
+- Die Audio-Layer-Metadaten liegen in `lib/audio/layer_state.dart`; die renderbaren Klangrezepte liegen in `lib/audio/chiptune_synth.dart`, damit UI und spätere Flame-/Audio-Anbindung dieselben Layer-IDs verwenden.
