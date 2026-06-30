@@ -2,11 +2,11 @@
 
 **Dokumentzweck:** Dieses Dokument beschreibt einen ersten funktionalen Prototyp der App so konkret, dass ein Entwickler ihn ohne weitere fachliche Rückfragen umsetzen kann. Es ist bewusst als Design- und Architektur-Spezifikation formuliert und enthält keinen Implementierungscode.
 
-**Primäre Quelle:** `docs/2026-06-30_Fachliche_Beschreibung.md`  
-**Zielplattform:** Installierbare Android-App für ein ungerootetes Android-16-Testgerät  
-**Empfohlener Tech-Stack:** Flutter + Flame + GitHub Actions + Golden Tests + AGENTS.md  
-**Entwicklungsumgebung:** CODEX Cloud, später optional Claude Web  
-**Prototyp-Ziel:** Ein 3–5-minütiger Vertical Slice mit einer Klangwelt, einem Track, sechs Layer-Puzzles und einem optionalen Glitch-Minispiel.
+- **Primäre Quelle:** `docs/2026-06-30_Fachliche_Beschreibung.md`
+- **Zielplattform:** Installierbare, signierte Android-APK für ein ungerootetes Android-16-Testgerät
+- **Empfohlener Tech-Stack:** jeweils aktuelle stabile Versionen von Flutter + Flame + GitHub Actions + Golden Tests + AGENTS.md
+- **Entwicklungsumgebung:** CODEX Cloud, später optional Claude Web
+- **Prototyp-Ziel:** Ein 3–5-minütiger Vertical Slice mit einer Klangwelt, einem Track, sechs Layer-Puzzles und einem optionalen Glitch-Minispiel.
 
 ---
 
@@ -59,7 +59,7 @@ Das Spiel soll sich **nicht** wie ein klassisches Rhythmusspiel, eine freie Komp
 
 ### 3.1 Android-Ziel
 
-Der Prototyp muss als APK oder Android App Bundle baubar und auf einem ungerooteten Android-16-Testgerät installierbar sein.
+Der Prototyp muss als signierte APK baubar und auf einem ungerooteten Android-16-Testgerät installierbar sein. Ein Android App Bundle kann später zusätzlich erzeugt werden, ist aber nicht das Abnahme-Artefakt des Prototyps.
 
 Mindestanforderungen:
 
@@ -67,21 +67,23 @@ Mindestanforderungen:
 - Portrait-Modus als Standard.
 - Keine Root-Rechte.
 - Keine lokalen Build-Tools auf dem Rechner des Auftraggebers erforderlich.
-- Build-Artefakt muss aus GitHub Actions herunterladbar sein.
+- Die signierte APK muss über ein GitHub Release herunterladbar sein.
 
 ### 3.2 Entwicklungs- und Build-Prozess
 
-Der vollständige Build-Prozess muss in GitHub Actions laufen:
+Der vollständige Build-Prozess muss in GitHub Actions laufen und darf ausschließlich manuell gestartet werden. Ein Push auf `main` oder einen anderen Branch darf keinen Android-Build auslösen.
 
-1. Repository wird ausgecheckt.
-2. Flutter SDK wird installiert oder über eine Action bereitgestellt.
-3. Dependencies werden geladen.
-4. Format-/Analyse-Checks laufen.
-5. Unit-/Widget-/Golden-Tests laufen.
-6. Android-APK wird gebaut.
-7. APK wird als Workflow-Artefakt veröffentlicht.
+1. Ein berechtigter Nutzer startet den Build manuell per `workflow_dispatch`.
+2. Repository wird ausgecheckt.
+3. Die jeweils aktuelle stabile Flutter-Version wird installiert oder über eine gepflegte Action bereitgestellt.
+4. Dependencies werden mit aktuellen, nicht veralteten Tool-Versionen geladen.
+5. Format-/Analyse-Checks laufen.
+6. Unit-/Widget-/Golden-Tests laufen.
+7. Eine signierte Android-APK wird gebaut.
+8. Ein GitHub Release wird erstellt oder aktualisiert.
+9. Die signierte APK wird als Release-Asset veröffentlicht.
 
-Lokale Entwicklung darf möglich sein, darf aber nicht notwendig sein.
+Lokale Entwicklung darf möglich sein, darf aber nicht notwendig sein. Der Build darf nicht von veralteten Actions, veralteten Android-Build-Tools oder gepinnten Altversionen abhängen. Nur beim Android-SDK gilt: Die App muss mindestens auf Android 16 funktionieren; Unterstützung älterer Android-Versionen ist erlaubt, aber nicht verpflichtend.
 
 ### 3.3 Entwicklung mit CODEX Cloud
 
@@ -102,11 +104,11 @@ Das Repository soll so strukturiert sein, dass CODEX Cloud zuverlässig Änderun
 
 | Bereich | Empfehlung | Begründung |
 |---|---|---|
-| App Framework | Flutter | Gute Android-Unterstützung, CI-freundlich, schnelle UI-Iteration. |
-| Game Runtime | Flame | Geeignet für 2D-Spielzustände, Sprites, Animationen und Game Loops. |
+| App Framework | Flutter, aktuelle stabile Version | Gute Android-Unterstützung, CI-freundlich, schnelle UI-Iteration. |
+| Game Runtime | Flame, aktuelle kompatible stabile Version | Geeignet für 2D-Spielzustände, Sprites, Animationen und Game Loops. |
 | Audio | Flutter-/Flame-kompatible Audio-Lösung | Layer müssen loopbar, synchronisierbar und einzeln aktivierbar sein. |
 | Tests | Unit Tests, Widget Tests, Golden Tests | Golden Tests sichern visuelle Zustände der Puzzle- und Welt-UI. |
-| CI/CD | GitHub Actions | Vollständiger Cloud-Build ohne lokale Entwicklungsumgebung. |
+| CI/CD | GitHub Actions mit aktuellen gepflegten Actions | Vollständiger manueller Cloud-Build ohne lokale Entwicklungsumgebung. |
 | Agenten-Kontext | AGENTS.md | Gibt CODEX Cloud Projektregeln, Build-Befehle und Konventionen. |
 
 ### 4.2 Zielarchitektur auf hoher Ebene
@@ -552,14 +554,16 @@ Vor Abnahme soll ein Entwickler auf einem Android-16-Testgerät prüfen:
 
 ## 12. GitHub-Actions-Anforderungen
 
-Es sollen mindestens zwei Workflows existieren:
+Es sollen mindestens zwei Workflows existieren. Alle verwendeten Actions, SDKs und Build-Tools müssen auf aktuellen, gepflegten Versionen basieren. Veraltete Actions-Versionen oder alte Flutter-/Java-/Android-Toolchains sind zu vermeiden. Versionen dürfen bewusst gepinnt werden, wenn sie auf eine aktuelle stabile Version zeigen und regelmäßig aktualisiert werden.
 
 ### 12.1 Tests Workflow
 
 Auslöser:
 
 - Pull Request
-- Push auf Hauptbranch
+- Optional manuell per `workflow_dispatch`
+
+Der Test-Workflow darf weiterhin in Pull Requests laufen, weil er keine Release-APK veröffentlicht.
 
 Aufgaben:
 
@@ -569,23 +573,30 @@ Aufgaben:
 - Statische Analyse ausführen.
 - Unit-/Widget-/Golden-Tests ausführen.
 
-### 12.2 Android Build Workflow
+### 12.2 Android Release Build Workflow
 
 Auslöser:
 
-- Pull Request optional
-- Push auf Hauptbranch
-- Manuell per `workflow_dispatch`
+- Ausschließlich manuell per `workflow_dispatch`
+
+Nicht erlaubte Auslöser:
+
+- Kein Push auf `main`
+- Kein Push auf andere Branches
+- Kein Pull-Request-Trigger für die Veröffentlichung einer APK
 
 Aufgaben:
 
-- Flutter installieren.
+- Aktuelle stabile Flutter-Version installieren.
+- Aktuelle kompatible Java-/Android-Toolchain verwenden.
 - Dependencies laden.
-- Tests optional oder verpflichtend ausführen.
-- Release- oder Debug-APK bauen.
-- APK als Artefakt hochladen.
+- Tests verpflichtend ausführen.
+- Release-APK bauen.
+- APK mit einem in GitHub Actions bereitgestellten Signing-Setup signieren.
+- GitHub Release erstellen oder aktualisieren.
+- Signierte APK als GitHub-Release-Asset hochladen.
 
-Für den ersten Prototyp ist eine Debug-APK ausreichend, sofern sie auf dem Testgerät installierbar ist.
+Das Ergebnis des Build-Prozesses ist eine signierte APK, die über ein GitHub Release herunterladbar ist. Eine reine Debug-APK oder ein bloßes Workflow-Artefakt reicht für die Abnahme nicht aus.
 
 ---
 
@@ -596,13 +607,13 @@ Im Repository-Root soll eine `AGENTS.md` liegen, damit CODEX Cloud zuverlässig 
 Sie soll mindestens enthalten:
 
 - Projektziel in 3–5 Sätzen.
-- Tech-Stack: Flutter + Flame.
+- Tech-Stack: jeweils aktuelle stabile Versionen von Flutter + Flame.
 - Wichtige Befehle:
   - Dependencies installieren.
   - Format prüfen.
   - Analyse ausführen.
   - Tests ausführen.
-  - Android-APK bauen.
+  - Signierte Android-Release-APK bauen.
 - Hinweis, dass keine lokale Entwicklungsumgebung vorausgesetzt werden darf.
 - Testanforderung vor Pull Requests.
 - Kurze Architekturübersicht.
@@ -615,19 +626,22 @@ Sie soll mindestens enthalten:
 
 Der Prototyp gilt als funktional, wenn alle folgenden Punkte erfüllt sind:
 
-1. Eine Android-APK wird vollständig in GitHub Actions gebaut und als Artefakt bereitgestellt.
-2. Die APK lässt sich auf einem ungerooteten Android-16-Gerät installieren.
-3. Die App startet direkt in oder vor den Level „Der Pixelhain“.
-4. Der Spieler kann sechs Puzzles lösen.
-5. Jeder gelöste Puzzle aktiviert genau einen neuen Musik-Layer dauerhaft.
-6. Mindestens ein Puzzle enthält einen verpflichtenden Richtungsknoten.
-7. Falsch ausgerichtete Richtungsknoten stoppen das Signal sichtbar, ohne harten Fehlerton.
-8. Nach Puzzle 3 kann optional ein Glitch-Minispiel gestartet werden.
-9. Das Glitch-Minispiel ist kurz, einfach und blockiert den Levelabschluss nicht.
-10. Nach Puzzle 6 läuft der vollständige Track und die Welt ist sichtbar aufgeblüht.
-11. Unit-/Widget- oder Integrationstests decken die Kernlogik ab.
-12. Golden Tests decken zentrale visuelle Zustände ab.
-13. README oder AGENTS.md dokumentieren, wie der CI-Build zu nutzen ist.
+1. Eine signierte Android-APK wird vollständig in GitHub Actions gebaut.
+2. Der Android-Build-Workflow wird ausschließlich manuell per `workflow_dispatch` ausgelöst.
+3. Die signierte APK wird als Asset eines GitHub Releases bereitgestellt.
+4. Die APK lässt sich auf einem ungerooteten Android-16-Gerät installieren.
+5. Die App startet direkt in oder vor den Level „Der Pixelhain“.
+6. Der Spieler kann sechs Puzzles lösen.
+7. Jeder gelöste Puzzle aktiviert genau einen neuen Musik-Layer dauerhaft.
+8. Mindestens ein Puzzle enthält einen verpflichtenden Richtungsknoten.
+9. Falsch ausgerichtete Richtungsknoten stoppen das Signal sichtbar, ohne harten Fehlerton.
+10. Nach Puzzle 3 kann optional ein Glitch-Minispiel gestartet werden.
+11. Das Glitch-Minispiel ist kurz, einfach und blockiert den Levelabschluss nicht.
+12. Nach Puzzle 6 läuft der vollständige Track und die Welt ist sichtbar aufgeblüht.
+13. Unit-/Widget- oder Integrationstests decken die Kernlogik ab.
+14. Golden Tests decken zentrale visuelle Zustände ab.
+15. README oder AGENTS.md dokumentieren, wie der manuelle Release-Build zu nutzen ist.
+16. Flutter, Flame, GitHub Actions und weitere Build-Tools werden in aktuellen stabilen Versionen verwendet; veraltete Toolchains sind nicht akzeptabel.
 
 ---
 
@@ -660,7 +674,7 @@ Empfohlene Umsetzungsreihenfolge:
 9. Puzzle 4–6 ergänzen.
 10. Optionales Glitch-Minispiel ergänzen.
 11. Golden Tests und Android-CI stabilisieren.
-12. APK-Artefakt erzeugen und auf Android-16-Gerät testen.
+12. Signierte APK über einen manuellen GitHub-Release-Build erzeugen und auf Android-16-Gerät testen.
 
 Die wichtigste technische und gestalterische Priorität bleibt:
 
