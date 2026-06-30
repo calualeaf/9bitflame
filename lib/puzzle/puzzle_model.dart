@@ -1,6 +1,16 @@
 enum Direction { up, right, down, left }
 
-enum NodeType { start, target, pattern, straight, curve, empty, noise, blocked, glitch }
+enum NodeType {
+  start,
+  target,
+  pattern,
+  straight,
+  curve,
+  empty,
+  noise,
+  blocked,
+  glitch,
+}
 
 enum PuzzleStatus { incomplete, almostSolved, solved }
 
@@ -45,28 +55,30 @@ class PuzzleNode {
 
   bool get isRotatable => type == NodeType.straight || type == NodeType.curve;
 
-  PuzzleNode rotated() => copyWith(rotation: Direction.values[(rotation.index + 1) % 4]);
+  PuzzleNode rotated() =>
+      copyWith(rotation: Direction.values[(rotation.index + 1) % 4]);
 
   PuzzleNode copyWith({Direction? rotation}) => PuzzleNode(
-        id: id,
-        type: type,
-        position: position,
-        patternIndex: patternIndex,
-        rotation: rotation ?? this.rotation,
-      );
+    id: id,
+    type: type,
+    position: position,
+    patternIndex: patternIndex,
+    rotation: rotation ?? this.rotation,
+  );
 
   bool connects(Direction incoming, Direction outgoing) {
     if (!isRotatable) return true;
     final allowed = switch (type) {
-      NodeType.straight => rotation == Direction.up || rotation == Direction.down
-          ? {Direction.up, Direction.down}
-          : {Direction.left, Direction.right},
+      NodeType.straight =>
+        rotation == Direction.up || rotation == Direction.down
+            ? {Direction.up, Direction.down}
+            : {Direction.left, Direction.right},
       NodeType.curve => switch (rotation) {
-          Direction.up => {Direction.up, Direction.right},
-          Direction.right => {Direction.right, Direction.down},
-          Direction.down => {Direction.down, Direction.left},
-          Direction.left => {Direction.left, Direction.up},
-        },
+        Direction.up => {Direction.up, Direction.right},
+        Direction.right => {Direction.right, Direction.down},
+        Direction.down => {Direction.down, Direction.left},
+        Direction.left => {Direction.left, Direction.up},
+      },
       _ => <Direction>{},
     };
     return allowed.contains(incoming) && allowed.contains(outgoing);
@@ -90,8 +102,10 @@ class PuzzleDefinition {
   final List<String> requiredPatternIds;
   final String? tutorialText;
 
-  PuzzleNode get start => nodes.singleWhere((node) => node.type == NodeType.start);
-  PuzzleNode get target => nodes.singleWhere((node) => node.type == NodeType.target);
+  PuzzleNode get start =>
+      nodes.singleWhere((node) => node.type == NodeType.start);
+  PuzzleNode get target =>
+      nodes.singleWhere((node) => node.type == NodeType.target);
   PuzzleNode? nodeAt(GridPoint point) {
     for (final node in nodes) {
       if (node.position == point) return node;
@@ -100,11 +114,13 @@ class PuzzleDefinition {
   }
 
   PuzzleDefinition replaceNode(PuzzleNode replacement) => PuzzleDefinition(
-        id: id,
-        title: title,
-        layerName: layerName,
-        nodes: [for (final node in nodes) node.id == replacement.id ? replacement : node],
-        requiredPatternIds: requiredPatternIds,
-        tutorialText: tutorialText,
-      );
+    id: id,
+    title: title,
+    layerName: layerName,
+    nodes: [
+      for (final node in nodes) node.id == replacement.id ? replacement : node,
+    ],
+    requiredPatternIds: requiredPatternIds,
+    tutorialText: tutorialText,
+  );
 }
