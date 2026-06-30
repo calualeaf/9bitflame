@@ -136,15 +136,37 @@ class _Grid extends StatelessWidget {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1,
-      child: GridView.count(
-        physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 4,
-        children: [
-          for (var y = 0; y < 4; y++)
-            for (var x = 0; x < 4; x++) _cell(puzzle.nodeAt(GridPoint(x, y))),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onPanStart: (details) =>
+                _addNodeAt(details.localPosition, constraints.biggest),
+            onPanUpdate: (details) =>
+                _addNodeAt(details.localPosition, constraints.biggest),
+            child: GridView.count(
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 4,
+              children: [
+                for (var y = 0; y < 4; y++)
+                  for (var x = 0; x < 4; x++)
+                    _cell(puzzle.nodeAt(GridPoint(x, y))),
+              ],
+            ),
+          );
+        },
       ),
     );
+  }
+
+  void _addNodeAt(Offset localPosition, Size gridSize) {
+    final cellSize = gridSize.width / 4;
+    final x = (localPosition.dx / cellSize).floor();
+    final y = (localPosition.dy / cellSize).floor();
+    if (x < 0 || x >= 4 || y < 0 || y >= 4) return;
+
+    final node = puzzle.nodeAt(GridPoint(x, y));
+    if (node != null) onAdd(node);
   }
 
   Widget _cell(PuzzleNode? node) {
@@ -155,7 +177,6 @@ class _Grid extends StatelessWidget {
     };
     return GestureDetector(
       onTap: node == null ? null : () => node.isRotatable ? onTap(node) : onAdd(node),
-      onLongPress: node == null ? null : () => onAdd(node),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         margin: const EdgeInsets.all(5),
