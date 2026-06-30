@@ -18,7 +18,11 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
   late final AudioLayerSystem audio = AudioLayerSystem(layerNames);
   var index = 0;
   var route = <GridPoint>[];
-  PuzzleEvaluation evaluation = const PuzzleEvaluation(PuzzleStatus.incomplete, 'Ziehe vom Start zum Ziel.', 0);
+  PuzzleEvaluation evaluation = const PuzzleEvaluation(
+    PuzzleStatus.incomplete,
+    'Ziehe vom Start zum Ziel.',
+    0,
+  );
 
   PuzzleDefinition get puzzle => puzzles[index];
 
@@ -39,7 +43,8 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
         route = [...route, node.position];
       }
       evaluation = engine.evaluate(puzzle, route);
-      if (evaluation.status == PuzzleStatus.solved && !progression.isSolved(puzzle.id)) {
+      if (evaluation.status == PuzzleStatus.solved &&
+          !progression.isSolved(puzzle.id)) {
         progression.markSolved(puzzle.id);
         audio.unlock(index);
       }
@@ -51,7 +56,11 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
           index++;
         }
         route = <GridPoint>[];
-        evaluation = const PuzzleEvaluation(PuzzleStatus.incomplete, 'Ziehe vom Start zum Ziel.', 0);
+        evaluation = const PuzzleEvaluation(
+          PuzzleStatus.incomplete,
+          'Ziehe vom Start zum Ziel.',
+          0,
+        );
       });
 
   @override
@@ -60,7 +69,11 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(colors: [Color(0xff09111f), Color(0xff173726)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+          gradient: LinearGradient(
+            colors: [Color(0xff09111f), Color(0xff173726)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
@@ -71,31 +84,61 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Der Pixelhain', style: Theme.of(context).textTheme.headlineMedium),
-                    Text(solvedAll ? 'Der Track groovt vollständig.' : puzzle.title),
+                    Text(
+                      'Der Pixelhain',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    Text(
+                      solvedAll
+                          ? 'Der Track groovt vollständig.'
+                          : puzzle.title,
+                    ),
                     const SizedBox(height: 12),
-                    _WorldTree(activeLayers: audio.unlockedCount, glitch: progression.glitchCompleted),
+                    _WorldTree(
+                      activeLayers: audio.unlockedCount,
+                      glitch: progression.glitchCompleted,
+                    ),
                     const SizedBox(height: 12),
-                    Text(puzzle.tutorialText ?? evaluation.message, textAlign: TextAlign.center),
+                    Text(
+                      puzzle.tutorialText ?? evaluation.message,
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 12),
-                    _Grid(puzzle: puzzle, route: route, onTap: _tap, onAdd: _add),
+                    _Grid(
+                      puzzle: puzzle,
+                      route: route,
+                      onTap: _tap,
+                      onAdd: _add,
+                    ),
                     const SizedBox(height: 12),
                     Wrap(spacing: 8, runSpacing: 8, children: [
                       for (final layer in audio.layers)
                         Chip(
                           label: Text(layer.name),
-                          backgroundColor: layer.unlocked ? const Color(0xff72ffb6) : const Color(0xff243044),
+                          backgroundColor: layer.unlocked
+                              ? const Color(0xff72ffb6)
+                              : const Color(0xff243044),
                         ),
                     ]),
                     const SizedBox(height: 16),
                     if (evaluation.status == PuzzleStatus.solved && !solvedAll)
-                      FilledButton(onPressed: _next, child: const Text('Nächstes Puzzle')),
+                      FilledButton(
+                        onPressed: _next,
+                        child: const Text('Nächstes Puzzle'),
+                      ),
                     if (solvedAll)
-                      FilledButton(onPressed: () => setState(() => index = 0), child: const Text('Nochmal spielen')),
-                    if (progression.glitchUnlocked && !progression.glitchCompleted)
+                      FilledButton(
+                        onPressed: () => setState(() => index = 0),
+                        child: const Text('Nochmal spielen'),
+                      ),
+                    if (progression.glitchUnlocked &&
+                        !progression.glitchCompleted)
                       TextButton(
-                        onPressed: () => setState(() => progression.glitchCompleted = true),
-                        child: const Text('Glitch-Minispiel: Parallel Run starten'),
+                        onPressed: () =>
+                            setState(() => progression.glitchCompleted = true),
+                        child: const Text(
+                          'Glitch-Minispiel: Parallel Run starten',
+                        ),
                       ),
                   ],
                 ),
@@ -115,18 +158,38 @@ class _WorldTree extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Color.lerp(const Color(0xff35445e), const Color(0xff72ffb6), activeLayers / 6)!;
+    final color = Color.lerp(
+      const Color(0xff35445e),
+      const Color(0xff72ffb6),
+      activeLayers / 6,
+    )!;
     return Container(
       height: 140,
       width: double.infinity,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xaa0c1729), border: Border.all(color: color, width: 3)),
-      child: Center(child: Text(glitch ? '🌳✨🟣' : List.filled(activeLayers.clamp(1, 6), '🌳✨').join(' '), style: TextStyle(fontSize: 28, color: color))),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: const Color(0xaa0c1729),
+        border: Border.all(color: color, width: 3),
+      ),
+      child: Center(
+        child: Text(
+          glitch
+              ? '🌳✨🟣'
+              : List.filled(activeLayers.clamp(1, 6), '🌳✨').join(' '),
+          style: TextStyle(fontSize: 28, color: color),
+        ),
+      ),
     );
   }
 }
 
 class _Grid extends StatelessWidget {
-  const _Grid({required this.puzzle, required this.route, required this.onTap, required this.onAdd});
+  const _Grid({
+    required this.puzzle,
+    required this.route,
+    required this.onTap,
+    required this.onAdd,
+  });
   final PuzzleDefinition puzzle;
   final List<GridPoint> route;
   final ValueChanged<PuzzleNode> onTap;
@@ -172,18 +235,34 @@ class _Grid extends StatelessWidget {
   Widget _cell(PuzzleNode? node) {
     final selected = node != null && route.contains(node.position);
     final icon = switch (node?.type) {
-      NodeType.start => '▶', NodeType.target => '◎', NodeType.pattern => '♪', NodeType.straight => node!.rotation == Direction.up || node.rotation == Direction.down ? '┃' : '━',
-      NodeType.curve => '┗', NodeType.noise => '×', NodeType.blocked => '■', NodeType.glitch => '◈', _ => '·',
+      NodeType.start => '▶',
+      NodeType.target => '◎',
+      NodeType.pattern => '♪',
+      NodeType.straight =>
+        node!.rotation == Direction.up || node.rotation == Direction.down
+            ? '┃'
+            : '━',
+      NodeType.curve => '┗',
+      NodeType.noise => '×',
+      NodeType.blocked => '■',
+      NodeType.glitch => '◈',
+      _ => '·',
     };
     return GestureDetector(
-      onTap: node == null ? null : () => node.isRotatable ? onTap(node) : onAdd(node),
+      onTap: node == null
+          ? null
+          : () => node.isRotatable ? onTap(node) : onAdd(node),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         margin: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: selected ? const Color(0xff72ffb6) : const Color(0xff17243a),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: node?.type == NodeType.blocked ? Colors.redAccent : Colors.white24),
+          border: Border.all(
+            color: node?.type == NodeType.blocked
+                ? Colors.redAccent
+                : Colors.white24,
+          ),
         ),
         child: Center(child: Text(icon, style: const TextStyle(fontSize: 28))),
       ),

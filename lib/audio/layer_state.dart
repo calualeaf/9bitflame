@@ -1,5 +1,9 @@
 class LayerState {
-  const LayerState({required this.name, this.unlocked = false, this.ghost = false});
+  const LayerState({
+    required this.name,
+    this.unlocked = false,
+    this.ghost = false,
+  });
   final String name;
   final bool unlocked;
   final bool ghost;
@@ -10,7 +14,7 @@ class LayerState {
 
 class AudioLayerSystem {
   AudioLayerSystem(List<String> layerNames)
-      : layers = [for (final name in layerNames) LayerState(name: name)];
+    : layers = [for (final name in layerNames) LayerState(name: name)];
 
   final List<LayerState> layers;
 
