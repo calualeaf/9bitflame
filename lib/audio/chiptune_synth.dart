@@ -27,86 +27,98 @@ class ChiptuneLayerRecipe {
   final int noiseSeed;
 }
 
+const pixelhainKickRecipe = ChiptuneLayerRecipe(
+  id: 'kick',
+  wave: ChiptuneWave.triangle,
+  notes: [
+    ChiptuneNote(-24, 0, 0.25),
+    ChiptuneNote(-24, 2, 0.25),
+    ChiptuneNote(-24, 4, 0.25),
+    ChiptuneNote(-24, 6, 0.25),
+  ],
+  volume: 0.8,
+);
+
+const pixelhainSnareRecipe = ChiptuneLayerRecipe(
+  id: 'snare',
+  wave: ChiptuneWave.noise,
+  notes: [
+    ChiptuneNote(0, 1, 0.18),
+    ChiptuneNote(0, 3, 0.18),
+    ChiptuneNote(0, 5, 0.18),
+    ChiptuneNote(0, 7, 0.18),
+  ],
+  volume: 0.45,
+  noiseSeed: 9,
+);
+
+const pixelhainBassRecipe = ChiptuneLayerRecipe(
+  id: 'bass',
+  wave: ChiptuneWave.square,
+  notes: [
+    ChiptuneNote(-12, 0, 0.9),
+    ChiptuneNote(-5, 1, 0.9),
+    ChiptuneNote(-3, 2, 0.9),
+    ChiptuneNote(-5, 3, 0.9),
+    ChiptuneNote(-12, 4, 0.9),
+    ChiptuneNote(-5, 5, 0.9),
+    ChiptuneNote(-8, 6, 0.9),
+    ChiptuneNote(-10, 7, 0.9),
+  ],
+  volume: 0.48,
+);
+
+const pixelhainArpRecipe = ChiptuneLayerRecipe(
+  id: 'arp',
+  wave: ChiptuneWave.triangle,
+  notes: [
+    ChiptuneNote(0, 0, 0.3),
+    ChiptuneNote(4, 0.5, 0.3),
+    ChiptuneNote(7, 1, 0.3),
+    ChiptuneNote(12, 1.5, 0.3),
+    ChiptuneNote(11, 2, 0.3),
+    ChiptuneNote(7, 2.5, 0.3),
+    ChiptuneNote(4, 3, 0.3),
+    ChiptuneNote(7, 3.5, 0.3),
+  ],
+  volume: 0.34,
+);
+
+const pixelhainLeadRecipe = ChiptuneLayerRecipe(
+  id: 'lead',
+  wave: ChiptuneWave.square,
+  notes: [
+    ChiptuneNote(12, 0, 0.45),
+    ChiptuneNote(16, 0.5, 0.45),
+    ChiptuneNote(19, 1, 0.45),
+    ChiptuneNote(21, 1.5, 0.45),
+    ChiptuneNote(19, 2, 0.45),
+    ChiptuneNote(16, 2.5, 0.45),
+    ChiptuneNote(14, 3, 0.45),
+    ChiptuneNote(12, 3.5, 0.45),
+  ],
+  volume: 0.42,
+);
+
+const pixelhainFxRecipe = ChiptuneLayerRecipe(
+  id: 'fx',
+  wave: ChiptuneWave.triangle,
+  notes: [
+    ChiptuneNote(24, 0, 0.12),
+    ChiptuneNote(31, 2, 0.12),
+    ChiptuneNote(28, 4, 0.12),
+    ChiptuneNote(36, 6, 0.12),
+  ],
+  volume: 0.38,
+);
+
 const pixelhainLayerRecipes = [
-  ChiptuneLayerRecipe(
-    id: 'kick',
-    wave: ChiptuneWave.triangle,
-    notes: [
-      ChiptuneNote(-24, 0, 0.25),
-      ChiptuneNote(-24, 2, 0.25),
-      ChiptuneNote(-24, 4, 0.25),
-      ChiptuneNote(-24, 6, 0.25),
-    ],
-    volume: 0.8,
-  ),
-  ChiptuneLayerRecipe(
-    id: 'snare',
-    wave: ChiptuneWave.noise,
-    notes: [
-      ChiptuneNote(0, 1, 0.18),
-      ChiptuneNote(0, 3, 0.18),
-      ChiptuneNote(0, 5, 0.18),
-      ChiptuneNote(0, 7, 0.18),
-    ],
-    volume: 0.45,
-    noiseSeed: 9,
-  ),
-  ChiptuneLayerRecipe(
-    id: 'bass',
-    wave: ChiptuneWave.square,
-    notes: [
-      ChiptuneNote(-12, 0, 0.9),
-      ChiptuneNote(-5, 1, 0.9),
-      ChiptuneNote(-3, 2, 0.9),
-      ChiptuneNote(-5, 3, 0.9),
-      ChiptuneNote(-12, 4, 0.9),
-      ChiptuneNote(-5, 5, 0.9),
-      ChiptuneNote(-8, 6, 0.9),
-      ChiptuneNote(-10, 7, 0.9),
-    ],
-    volume: 0.48,
-  ),
-  ChiptuneLayerRecipe(
-    id: 'arp',
-    wave: ChiptuneWave.triangle,
-    notes: [
-      ChiptuneNote(0, 0, 0.3),
-      ChiptuneNote(4, 0.5, 0.3),
-      ChiptuneNote(7, 1, 0.3),
-      ChiptuneNote(12, 1.5, 0.3),
-      ChiptuneNote(11, 2, 0.3),
-      ChiptuneNote(7, 2.5, 0.3),
-      ChiptuneNote(4, 3, 0.3),
-      ChiptuneNote(7, 3.5, 0.3),
-    ],
-    volume: 0.34,
-  ),
-  ChiptuneLayerRecipe(
-    id: 'lead',
-    wave: ChiptuneWave.square,
-    notes: [
-      ChiptuneNote(12, 0, 0.45),
-      ChiptuneNote(16, 0.5, 0.45),
-      ChiptuneNote(19, 1, 0.45),
-      ChiptuneNote(21, 1.5, 0.45),
-      ChiptuneNote(19, 2, 0.45),
-      ChiptuneNote(16, 2.5, 0.45),
-      ChiptuneNote(14, 3, 0.45),
-      ChiptuneNote(12, 3.5, 0.45),
-    ],
-    volume: 0.42,
-  ),
-  ChiptuneLayerRecipe(
-    id: 'fx',
-    wave: ChiptuneWave.triangle,
-    notes: [
-      ChiptuneNote(24, 0, 0.12),
-      ChiptuneNote(31, 2, 0.12),
-      ChiptuneNote(28, 4, 0.12),
-      ChiptuneNote(36, 6, 0.12),
-    ],
-    volume: 0.38,
-  ),
+  pixelhainKickRecipe,
+  pixelhainSnareRecipe,
+  pixelhainBassRecipe,
+  pixelhainArpRecipe,
+  pixelhainLeadRecipe,
+  pixelhainFxRecipe,
 ];
 
 class PixelhainChiptuneSynth {

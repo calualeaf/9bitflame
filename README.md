@@ -63,4 +63,6 @@ Square-/Triangle-Waves und Noise-Percussion. Die Layer sind bewusst
 Gameboy-inspiriert angelegt: Kick, Snare, Bassline, Arpeggio, Lead-Hook und
 FX-Fill ergänzen sich nach und nach zu einem eingängigen Chiptune-Loop. Die
 Rezepte liegen als Dart-Code im Repository, damit Pull Requests keine
-Binärdateien enthalten müssen.
+Binärdateien enthalten müssen. Beim Freischalten eines Layers rendert das
+Audio-System das passende Rezept zu WAV-Bytes und hält alle aktiven Layer für
+eine spätere Flame-Audio-Anbindung bereit.

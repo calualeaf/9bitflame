@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bitflame/audio/chiptune_synth.dart';
+import 'package:bitflame/audio/layer_state.dart';
 import 'package:bitflame/game/pixelhain_data.dart';
 import 'package:bitflame/puzzle/puzzle_engine.dart';
 import 'package:bitflame/puzzle/puzzle_model.dart';
@@ -62,6 +63,23 @@ void main() {
       GridPoint(3, 0),
     ]);
     expect(result.status, PuzzleStatus.solved);
+  });
+
+  test('audio layer unlock renders matching procedural wav bytes', () {
+    final audio = AudioLayerSystem(pixelhainAudioAssets);
+
+    expect(
+      [for (final asset in pixelhainAudioAssets) asset.recipe],
+      pixelhainLayerRecipes,
+    );
+    expect(audio.activeWavLayers, isEmpty);
+
+    audio.unlock(0);
+
+    expect(audio.layers.first.unlocked, isTrue);
+    expect(audio.layers.first.hasRenderedAudio, isTrue);
+    expect(audio.activeWavLayers, hasLength(1));
+    expect(ascii.decode(audio.activeWavLayers.first.sublist(0, 4)), 'RIFF');
   });
 
   test(

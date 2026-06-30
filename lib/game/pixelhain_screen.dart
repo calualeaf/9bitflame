@@ -119,7 +119,13 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
                       children: [
                         for (final layer in audio.layers)
                           Tooltip(
-                            message: '${layer.description}\n${layer.asset}',
+                            message: [
+                              layer.description,
+                              layer.asset,
+                              layer.hasRenderedAudio
+                                  ? 'WAV gerendert'
+                                  : 'Noch stumm',
+                            ].join('\n'),
                             child: Chip(
                               label: Text(layer.name),
                               backgroundColor: layer.unlocked
@@ -188,7 +194,7 @@ class _WorldTree extends StatelessWidget {
         child: Text(
           glitch
               ? '🌳✨🟣'
-              : List.filled(activeLayers.clamp(1, 6), '🌳✨').join(' '),
+              : List.filled(activeLayers.clamp(1, 6).toInt(), '🌳✨').join(' '),
           style: TextStyle(fontSize: 28, color: color),
         ),
       ),
