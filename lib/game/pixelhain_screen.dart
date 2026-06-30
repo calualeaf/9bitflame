@@ -138,8 +138,9 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
                     if (progression.glitchUnlocked &&
                         !progression.glitchCompleted)
                       TextButton(
-                        onPressed: () =>
-                            setState(() => progression.glitchCompleted = true),
+                        onPressed: () => setState(
+                          () => progression.glitchCompleted = true,
+                        ),
                         child: const Text(
                           'Glitch-Minispiel: Parallel Run starten',
                         ),
@@ -210,10 +211,14 @@ class _Grid extends StatelessWidget {
         builder: (context, constraints) {
           return GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onPanStart: (details) =>
-                _addNodeAt(details.localPosition, constraints.biggest),
-            onPanUpdate: (details) =>
-                _addNodeAt(details.localPosition, constraints.biggest),
+            onPanStart: (details) => _addNodeAt(
+              details.localPosition,
+              constraints.biggest,
+            ),
+            onPanUpdate: (details) => _addNodeAt(
+              details.localPosition,
+              constraints.biggest,
+            ),
             child: GridView.count(
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 4,
