@@ -63,33 +63,43 @@ class _PixelhainScreenState extends State<PixelhainScreen> {
           gradient: LinearGradient(colors: [Color(0xff09111f), Color(0xff173726)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
         ),
         child: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Text('Der Pixelhain', style: Theme.of(context).textTheme.headlineMedium),
-                Text(solvedAll ? 'Der Track groovt vollständig.' : puzzle.title),
-                const SizedBox(height: 12),
-                _WorldTree(activeLayers: audio.unlockedCount, glitch: progression.glitchCompleted),
-                const SizedBox(height: 12),
-                Text(puzzle.tutorialText ?? evaluation.message, textAlign: TextAlign.center),
-                const SizedBox(height: 12),
-                _Grid(puzzle: puzzle, route: route, onTap: _tap, onAdd: _add),
-                const SizedBox(height: 12),
-                Wrap(spacing: 8, runSpacing: 8, children: [
-                  for (final layer in audio.layers)
-                    Chip(
-                      label: Text(layer.name),
-                      backgroundColor: layer.unlocked ? const Color(0xff72ffb6) : const Color(0xff243044),
-                    ),
-                ]),
-                const Spacer(),
-                if (evaluation.status == PuzzleStatus.solved && !solvedAll)
-                  FilledButton(onPressed: _next, child: const Text('Nächstes Puzzle')),
-                if (solvedAll) FilledButton(onPressed: () => setState(() => index = 0), child: const Text('Nochmal spielen')),
-                if (progression.glitchUnlocked && !progression.glitchCompleted)
-                  TextButton(onPressed: () => setState(() => progression.glitchCompleted = true), child: const Text('Glitch-Minispiel: Parallel Run starten')),
-              ],
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Der Pixelhain', style: Theme.of(context).textTheme.headlineMedium),
+                    Text(solvedAll ? 'Der Track groovt vollständig.' : puzzle.title),
+                    const SizedBox(height: 12),
+                    _WorldTree(activeLayers: audio.unlockedCount, glitch: progression.glitchCompleted),
+                    const SizedBox(height: 12),
+                    Text(puzzle.tutorialText ?? evaluation.message, textAlign: TextAlign.center),
+                    const SizedBox(height: 12),
+                    _Grid(puzzle: puzzle, route: route, onTap: _tap, onAdd: _add),
+                    const SizedBox(height: 12),
+                    Wrap(spacing: 8, runSpacing: 8, children: [
+                      for (final layer in audio.layers)
+                        Chip(
+                          label: Text(layer.name),
+                          backgroundColor: layer.unlocked ? const Color(0xff72ffb6) : const Color(0xff243044),
+                        ),
+                    ]),
+                    const SizedBox(height: 16),
+                    if (evaluation.status == PuzzleStatus.solved && !solvedAll)
+                      FilledButton(onPressed: _next, child: const Text('Nächstes Puzzle')),
+                    if (solvedAll)
+                      FilledButton(onPressed: () => setState(() => index = 0), child: const Text('Nochmal spielen')),
+                    if (progression.glitchUnlocked && !progression.glitchCompleted)
+                      TextButton(
+                        onPressed: () => setState(() => progression.glitchCompleted = true),
+                        child: const Text('Glitch-Minispiel: Parallel Run starten'),
+                      ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
